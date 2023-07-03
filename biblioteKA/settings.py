@@ -37,7 +37,7 @@ if RENDER_EXTERNAL_HOSTNAME:
 
 # Application definition
 
-MY_APPS = []
+MY_APPS = ["users", "books", "loans", "copies"]
 
 THIRD_PARTY_APPS = [
     "rest_framework",
