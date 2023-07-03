@@ -57,6 +57,7 @@ INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + MY_APPS
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -155,11 +156,11 @@ STATIC_URL = "static/"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-AUTH_USER_MODEL = "users.User"
+# AUTH_USER_MODEL = "users.User"
 
 
 SPECTACULAR_SETTINGS = {
-    "TITLE": "BandKamp",
-    "DESCRIPTION": "Database simples que permite a criação e manutenção de usuários, álbuns e músicas.",
+    "TITLE": "BiblioteKA",
+    "DESCRIPTION": "Database simples que permite o gerenciamento de uma biblioteca de livros.",
     "VERSION": "1.0.0",
 }
