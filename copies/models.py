@@ -1,3 +1,6 @@
 from django.db import models
 
-# Create your models here.
+class Copie(models.Model):
+    # class Meta:
+    #     ordering = ["id"]
+    quantity = models.IntegerField()
