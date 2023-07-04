@@ -2,9 +2,9 @@ from rest_framework import serializers
 from .models import User
 from rest_framework.validators import UniqueValidator
 
-class UsersSerializer(serializers.ModelSerializer):
+class UserSerializer(serializers.ModelSerializer):
     class Meta:
-        model: User
+        model = User
         fields = ['id', 'books', 'username', 'email', 'is_auth', 'is_admin', 'password']
         extra_kwargs = {
             'id': {'read_only': True},
@@ -14,11 +14,12 @@ class UsersSerializer(serializers.ModelSerializer):
             'email': {
                 'validators': [UniqueValidator(queryset = User.objects.all(), message = 'Email already registered.')]
             },
-            'password': {'write_only': True}
+            'password': {'write_only': True},
+            'books': {'read_only': True},
         }
 
     def create(self, validated_data: dict) -> User:
-        return User.objects.create(**validated_data)
+        return User.objects.create_user(**validated_data)
     
     def update(self, validated_data: dict, instance: User) -> User:
 
@@ -31,3 +32,4 @@ class UsersSerializer(serializers.ModelSerializer):
             
         instance.save()
         return instance
+    
