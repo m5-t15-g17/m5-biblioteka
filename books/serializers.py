@@ -1,11 +1,11 @@
 from rest_framework import serializers
 
 from books.models import Book
-from users.serializers import UsersSerializer
+from users.serializers import UserSerializer
 
 
 class BookSerializer(serializers.ModelSerializer):
-    user = UsersSerializer(read_only=True)
+    user = UserSerializer(read_only=True)
 
     def create(self, validated_data: dict) -> Book:
         return Book.objects.create(**validated_data)
