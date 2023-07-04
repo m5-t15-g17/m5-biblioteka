@@ -4,16 +4,14 @@ from .serializers import UserSerializer
 from .permissions import IsAccountOwner
 from rest_framework.generics import RetrieveUpdateDestroyAPIView, ListCreateAPIView
 from rest_framework.views import Request, status, Response
- 
-
 
 
 class UserView(ListCreateAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
-    def post(self, request: Request, *args, **kwargs):
-        return super().post(request, *args, **kwargs)
+    # def post(self, request: Request, *args, **kwargs):
+    #     return super().post(request, *args, **kwargs)
    
 
 class UserDetailView(RetrieveUpdateDestroyAPIView):
@@ -23,3 +21,5 @@ class UserDetailView(RetrieveUpdateDestroyAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     lookup_url_kwarg = 'pk'
+
+    

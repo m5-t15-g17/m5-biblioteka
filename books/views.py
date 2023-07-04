@@ -13,5 +13,8 @@ class BookView(ListCreateAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
 
-    # def perform_create(self, serializer):
-    #     return serializer.save(user_id=self.kwargs.)
+    # def post(self, request, *args, **kwargs):
+    #     return super().post(request, *args, **kwargs)
+
+    def perform_create(self, serializer):
+        return serializer.save(user=self.request.user)
