@@ -5,7 +5,7 @@ from rest_framework.validators import UniqueValidator
 class UsersSerializer(serializers.ModelSerializer):
     class Meta:
         model: User
-        fields = ['id', 'books', 'username', 'email', 'is_auth', 'is_admin', 'book_history', 'password']
+        fields = ['id', 'books', 'username', 'email', 'is_auth', 'is_admin', 'password']
         extra_kwargs = {
             'id': {'read_only': True},
             'username': {
