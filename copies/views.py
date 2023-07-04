@@ -5,8 +5,8 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework.generics import ListCreateAPIView
 
 class CopyView(ListCreateAPIView):
-    authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticatedOrReadOnly]
+    # authentication_classes = [JWTAuthentication]
+    # permission_classes = [IsAuthenticatedOrReadOnly]
     queryset = Copy.objects.all()
     serializer_class = CopySerializer
 
