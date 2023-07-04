@@ -6,8 +6,7 @@ from books.models import Book
 class BookSerializer(serializers.ModelSerializer):
     class Meta:
         book = Book
-        fields = ["id", "user", "copy_id", "description", "is_available", "name"]
-        extra_kwargs = {"copy_id": {"read_only": True}}
+        fields = ["id", "user", "description", "is_available", "name"]
 
     def create(self, validated_data: dict) -> Book:
         return Book.objects.create(**validated_data)
