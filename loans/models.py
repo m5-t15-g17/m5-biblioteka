@@ -13,3 +13,9 @@ class Loan(models.Model):
     loan_date = models.DateField(auto_now_add=True)
     expected_return = models.DateField(default=returnDate)
     delay = models.BooleanField(default=False)
+
+    @property
+    def delay(self):
+        if datetime.now > self.return_date:
+            return True
+        return False
