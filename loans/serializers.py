@@ -4,4 +4,8 @@ from .models import Loan
 class LoanSerializer(serializers.ModelSerializer):
     class Meta:
         model = Loan
-        fields = [None]
+        fields = ["id", "user_id", "copy_id", "return_date", "loan_date", "expected_return", "delay"]
+        read_only_fields = ["user_id", "copy_id", "return_date", "loan_date", "expected_return", "delay"]
+
+        def create(self, validated_data):
+            return Loan.objects.create(**validated_data)
