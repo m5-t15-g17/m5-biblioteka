@@ -9,9 +9,6 @@ from rest_framework.permissions import IsAuthenticated
 class UserView(ListCreateAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
-
-    # def post(self, request: Request, *args, **kwargs):
-    #     return super().post(request, *args, **kwargs)
    
 
 class UserDetailView(RetrieveUpdateDestroyAPIView):
