@@ -6,3 +6,4 @@ class User(AbstractUser):
     email = models.CharField(max_length = 127)
     is_auth = models.BooleanField(default = False)
     is_admin = models.BooleanField(default = False)
+    is_block = models.BooleanField(default = False)
