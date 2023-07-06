@@ -14,7 +14,7 @@ class BookSerializer(serializers.ModelSerializer):
         model = Book
         fields = ["id", "user", "description", "is_available", "name"]
 
-    def update(self, validated_data: dict, instance: Book) -> Book:
+    def update(self, instance: Book, validated_data: dict) -> Book:
         for key, value in validated_data.items():
             setattr(instance, key, value)
 
