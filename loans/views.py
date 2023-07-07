@@ -55,7 +55,7 @@ class LoanView(generics.CreateAPIView):
                 serializer.is_valid(raise_exception=True)
                 serializer.save()
             else:
-                serializer = BookSerializer(book)
+                serializer = BookSerializer(book, {'is_avaliable': 'is_avaliable' False}, partial = True)
 
         return serializer.save(copy=copy,expected_return=returnDate, user = user)
     
