@@ -78,6 +78,13 @@ class LoanView(generics.CreateAPIView):
 
         for copy in copys:
             if copy.id == self.kwargs.get("pk"):
+                if(copy.copyNumber == 0):
+
+                    book = get_object_or_404(Book, pk=copy.book)
+                    serializer = BookSerializer(book,{"is_avaliable":True}, partial=True)
+                    serializer.is_valid(raise_exception=True)
+                    serializer.save()
+                    
                 serializer = CopySerializer(copy,{'copyNumber':"copyNumber"+1}, partial=True )
                 serializer.is_valid(raise_exception=True)
                 serializer.save()
