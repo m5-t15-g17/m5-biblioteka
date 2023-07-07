@@ -5,6 +5,8 @@ from users.serializers import UserSerializer
 from .models import Loan
 from .serializers import LoanSerializer
 from copies.serializers import CopySerializer
+from books.serializers import BookSerializer
+from books.models import Book
 from copies.models import Copy
 from users.models import User
 from datetime import datetime
@@ -50,6 +52,14 @@ class LoanView(generics.CreateAPIView):
 
         for copy in copys:
             if copy.id == self.kwargs.get("pk"):
+                if(copy.copyNumber == 0):
+
+                    book = get_object_or_404(Book, pk=copy.book)
+                    serializer = BookSerializer(book,{"is_avaliable":False}, partial=True)
+                    serializer.is_valid(raise_exception=True)
+                    serializer.save()
+                    return Response("no copies left", 400)
+
                 serializer = CopySerializer(copy,{'copyNumber':"copyNumber"-1}, partial=True )
                 serializer.is_valid(raise_exception=True)
                 serializer.save()
