@@ -4,7 +4,6 @@ from rest_framework import generics
 from users.serializers import UserSerializer
 from .models import Loan
 from .serializers import LoanSerializer
-from copies.models import Copy
 from users.models import User
 from datetime import datetime
 from rest_framework.views import Request, Response, status
