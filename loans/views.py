@@ -4,6 +4,7 @@ from rest_framework import generics
 from users.serializers import UserSerializer
 from .models import Loan
 from .serializers import LoanSerializer
+from copies.serializers import CopySerializer
 from copies.models import Copy
 from users.models import User
 from datetime import datetime
@@ -13,13 +14,12 @@ class LoanView(generics.CreateAPIView):
     
     queryset = Loan.objects.all()
     serializer_class = LoanSerializer
-    lookup_url_kwarg = "copy_id"
 
     def get_queryset(self):
         queryset = super().get_queryset()
-        instance_trait = get_object_or_404(User, pk=self.kwargs.get("user_id"))
+        instance_user = get_object_or_404(User, pk=self.request.user.id)
 
-        return queryset.filter(users=instance_trait)
+        return queryset.filter(users=instance_user)
     
     def post(self, request):
         user = get_object_or_404(User, id = self.request.user.id)
@@ -38,14 +38,44 @@ class LoanView(generics.CreateAPIView):
                 serializer.save()
 
                 return Response({'error': 'User blocked'})
+            
+    def perform_create(self, serializer):
+
+        returnDate = datetime.datetime.now()
+        returnDate = returnDate + datetime.timedelta(7,0)
+
+        user = get_object_or_404(User, pk=self.request.user.id)
+        copy = get_object_or_404(Copy, pk=self.kwargs.get("pk"))
+        copys = copy.loan.all()
+
+        for copy in copys:
+            if copy.id == self.kwargs.get("pk"):
+                serializer = CopySerializer(copy,{'copyNumber':"copyNumber"-1}, partial=True )
+                serializer.is_valid(raise_exception=True)
+                serializer.save()
+
+                break
+
+        return serializer.save(copy=copy,expected_return=returnDate, user = user)
     
     def patch(self, request: Request):
         user = get_object_or_404(User, id = self.request.user.id)
 
         self.check_object_permissions(request, user)
         loans = user.loan.all()
+        copy = get_object_or_404(Copy, pk=self.kwargs.get("pk"))
+        copys = copy.loan.all()
+
+        for copy in copys:
+            if copy.id == self.kwargs.get("pk"):
+                serializer = CopySerializer(copy,{'copyNumber':"copyNumber"+1}, partial=True )
+                serializer.is_valid(raise_exception=True)
+                serializer.save()
+
+                break
 
         for loan in loans:
+
             if loan.return_date < datetime.now():
                 serializer = UserSerializer(user, {'is_blocked': True}, partial = True)
                 serializer.is_valid(raise_exception = True)
