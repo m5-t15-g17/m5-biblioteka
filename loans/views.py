@@ -11,8 +11,11 @@ from copies.models import Copy
 from users.models import User
 from datetime import datetime
 from rest_framework.views import Request, Response, status
+from rest_framework_simplejwt.authentication import JWTAuthentication
 
 class LoanView(generics.CreateAPIView):
+
+    authentication_classes = [JWTAuthentication]
     
     queryset = Loan.objects.all()
     serializer_class = LoanSerializer
