@@ -47,26 +47,26 @@ class LoanView(generics.ListCreateAPIView):
     #     user = get_object_or_404(User, id=self.request.user.id)
     #     return super().post(request, *args, **kwargs)
 
-    def post(self, request, *args, **kwargs):
-        print("estou no post")
-        user = get_object_or_404(User, id=self.request.user.id)
-        print(user, "UUUUUUUUUUUUUUSER")
-        # if user.is_block:
-        #     print("estou no post2")
-        #     return Response({"error": "User blocked"})
-        # loans = user.loans.all()
+    # def post(self, request, *args, **kwargs):
+    #     print("estou no post")
+    #     user = get_object_or_404(User, id=self.request.user.id)
+    #     print(user, "UUUUUUUUUUUUUUSER")
+    #     # if user.is_block:
+    #     #     print("estou no post2")
+    #     #     return Response({"error": "User blocked"})
+    #     # loans = user.loans.all()
 
-        # for loan in loans:
-        #     print("estou no post3")
-        #     if loan.return_date < datetime.now():
-        #         serializer = UserSerializer(user, {"is_block": True}, partial=True)
-        #         print("estou no post4")
-        #         serializer.is_valid(raise_exception=True)
-        #         serializer.save()
-        #         print("estou no post5")
-        #         return Response({"error": "User blocked"})
-        # return super().post(request, *args, **kwargs)
-        return Response({"message":"Emprestimo feito com sucesso"})
+    #     # for loan in loans:
+    #     #     print("estou no post3")
+    #     #     if loan.return_date < datetime.now():
+    #     #         serializer = UserSerializer(user, {"is_block": True}, partial=True)
+    #     #         print("estou no post4")
+    #     #         serializer.is_valid(raise_exception=True)
+    #     #         serializer.save()
+    #     #         print("estou no post5")
+    #     #         return Response({"error": "User blocked"})
+    #     # return super().post(request, *args, **kwargs)
+    #     return Response({"message":"Emprestimo feito com sucesso"})
     def perform_create(self, serializer):
         returnDate = datetime.now()
         returnDate = returnDate + timedelta(7, 0)
@@ -76,6 +76,7 @@ class LoanView(generics.ListCreateAPIView):
             print("estou no post2")
             return Response({"error": "User blocked"})
         loans = user.loans.all()
+        print(loans, "LOOOOOOOOOOANS")
 
         for loan in loans:
             print("estou no post3")
@@ -95,26 +96,30 @@ class LoanView(generics.ListCreateAPIView):
         # pdb.set_trace()
         # if copy.id == self.kwargs.get("pk"):
         if copy.copyNumber == 0:
-            book = get_object_or_404(Book, id=copy.book)
+            book = get_object_or_404(Book, id=copy.book.id)
             serializer = BookSerializer(book, {"is_avaliable": False}, partial=True)
             serializer.is_valid(raise_exception=True)
             serializer.save()
             return Response("no copies left", 400)
 
-        serializer = CopySerializer(data=copy, partial=True)
-        serializer.copyNumber = copy.copyNumber - 1
-        serializer.is_valid(raise_exception=True)
+        copy.copyNumber-= 1
+        # serializer.is_valid(raise_exception=True)
+        copy.save()
+
+        # loanSerializer = LoanSerializer(copy=copy, expected_return=returnDate, user=user)
+        # loanSerializer.is_valid(raise_exception=True)
+        # print(loanSerializer,"PRIIIIIIIIIIIIINT")
+        # # serializer.save(copy=copy, expected_return=returnDate, user=user)
+        # # break
+        # # copyDict = model_to_dict(serializer)
+
+        # # return Response(copyDict)
+        # loanSerializer.save()
+        # return Response(loanSerializer.data)
+        serializer=LoanSerializer(copy=copy, expected_return=returnDate, user=user)
         serializer.save()
-
-        loanSerializer = LoanSerializer(copy=copy, expected_return=returnDate, user=user)
-        loanSerializer.is_valid(raise_exception=True)
-
-        # serializer.save(copy=copy, expected_return=returnDate, user=user)
-        # break
-        # copyDict = model_to_dict(serializer)
-
-        # return Response(copyDict)
-        return loanSerializer.save()
+    
+        return Response(serializer.data)
 
     # def perform_create(self, serializer):
     #     returnDate = datetime.datetime.now()
