@@ -18,7 +18,7 @@ from datetime import timedelta
 from django.forms import model_to_dict
 
 
-class LoanView(generics.CreateAPIView):
+class LoanView(generics.ListCreateAPIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
     lookup_url_kwarg = "pk"
@@ -30,6 +30,8 @@ class LoanView(generics.CreateAPIView):
     print("2")
 
     # pdb.set_trace()
+    # def create(self)
+
     def get_queryset(self):
         print("3")
         # pdb.set_trace()
@@ -48,7 +50,7 @@ class LoanView(generics.CreateAPIView):
     def post(self, request, *args, **kwargs):
         print("estou no post")
         user = get_object_or_404(User, id=self.request.user.id)
-
+        print(user, "UUUUUUUUUUUUUUSER")
         # if user.is_block:
         #     print("estou no post2")
         #     return Response({"error": "User blocked"})
@@ -176,3 +178,4 @@ class LoanView(generics.CreateAPIView):
         serializer = LoanSerializer(loan)
 
         return Response(serializer.data, 200)
+    
