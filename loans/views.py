@@ -103,9 +103,9 @@ class LoanViewUpdate(generics.UpdateAPIView):
 
         loan = get_object_or_404(Loan, id=copy.id)
 
-        queryset.return_date = date.today()
-        user.save()
+        loan.return_date = date.today()
+        loan.save()
 
-        serializer = LoanSerializer(queryset)
+        serializer = LoanSerializer(loan)
 
         return Response(serializer.data, 200)
