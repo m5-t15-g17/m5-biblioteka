@@ -66,22 +66,21 @@ class LoanView(generics.ListCreateAPIView):
 
 
 class LoanViewUpdate(generics.UpdateAPIView):
-    
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
     queryset = Loan.objects.all()
     serializer_class = LoanSerializer
+    lookup_url_kwarg = 'pk'
 
     # def get_queryset(self):
     #     queryset = super().get_queryset()
     #     instance_user = get_object_or_404(User, id=self.request.user.id)
 
     def perform_update(self, request: Request):
-        queryset = Loan.objects.filter(id= self.request.query_params.get("pk") )
+        queryset = Loan.objects.get(id=self.kwargs.get("pk"))
         user = self.request.user
-
-        self.check_object_permissions(request, user)
-        loans = user.loan.all()
-        copy = get_object_or_404(Copy, id=self.kwargs.get("pk"))
-        copys = copy.loan.all()
+        users = User.objects.all()
+        copys = Copy.objects.all()
 
         for copy in copys:
             if copy.id == self.kwargs.get("pk"):
@@ -95,18 +94,18 @@ class LoanViewUpdate(generics.UpdateAPIView):
 
                 break
 
-        for loan in loans:
-            if loan.return_date < date.today():
+        for user in users:
+            if queryset.returnDate < date.today():
                 user.is_block = True
                 user.save()
 
                 break
 
-        loan = get_object_or_404(Loan, id=copy.loan.id)
+        loan = get_object_or_404(Loan, id=copy.id)
 
-        loan.return_date = date.today()
-        loan.save()
+        queryset.return_date = date.today()
+        user.save()
 
-        serializer = LoanSerializer(loan)
+        serializer = LoanSerializer(queryset)
 
         return Response(serializer.data, 200)
